@@ -1,0 +1,32 @@
+Псевдокод для стеку:
+
+(4) Add(x, stack):
+  (1)   temp := new Stack
+  (1)   temp->element = x;
+  (1)   temp->next = stack->start;
+  (1)   stack->start = temp;
+
+(1) file fin;
+(n) while !fin.endOfFile():
+  (1)   x := fin.read()
+  (4)   Add(x, stack)
+-----------------------------------------
+max(1 + n * (1 + 4)) = max(1 + 5n) = O(n)
+-----------------------------------------
+
+Псевдокод для списку:
+
+(4) Add(x):
+  (1) temp := new element;
+  (1) temp->x = x;
+  (1) temp->Next = Head;
+  (1) Head = temp;
+
+(1) file fin;
+(n) while !fin.endOfFile():
+  (1)   x := fin.read()
+  (4)   list.Add(x)
+  -----------------------------------------
+  max(1 + n * (1 + 4)) = max(1 + 5n) = O(n)
+  -----------------------------------------
+  
