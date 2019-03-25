@@ -101,7 +101,7 @@ int main()
 		start_time = clock();
 		while (!fin.eof()) {
 			fin >> x;
-			Add(x, Stack_link);
+			list.Add(x);
 		}
 		finish_time = clock();
 		fin.close();

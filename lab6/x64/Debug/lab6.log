@@ -1,0 +1,5 @@
+﻿  lab6.cpp
+d:\study\discrete structures\lab6\lab6.cpp(109): warning C4244: =: преобразование "clock_t" в "float", возможна потеря данных
+d:\study\discrete structures\lab6\lab6.cpp(139): warning C4244: =: преобразование "clock_t" в "float", возможна потеря данных
+d:\study\discrete structures\lab6\lab6.cpp(122): warning C4101: w: неиспользованная локальная переменная
+  lab6.vcxproj -> D:\Study\Discrete Structures\lab6\x64\Debug\lab6.exe

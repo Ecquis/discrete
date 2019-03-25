@@ -1,0 +1,47 @@
+-------------------------------------------------------------
+(1) int distances[]
+(1) bool processed_verts[]
+
+(n) for i to verts_count:
+  (1) distances[i] = inf
+  (1) processed_verts[i] = false
+
+(1) distances[src] = 0
+(1) int u;
+
+(n) for count to verts_count:
+  (2+5n) u = minDistance()
+  (1) processed_verts[u] = true
+  (n) for v to verts_count:
+    (7) if !processed_verts[v] and graph[u][v] and distances[u] != inf and
+    distances[u] + graph[u][v] < distances[v]:
+      (2) distances[v] = distances[u] + graph[u][v]
+
+
+
+(2+5n) def minDistance():
+   (1) min = inf
+   (1) min_index;
+   (n) for v to verts_count:
+     (3) if processed_verts[v] == false and distances[v] <= min:
+     (1) min = distances[v]
+     (1) min_index = v;
+
+
+O(n) = 1+1+2n+1+1+n*(2+5n+1+9n) = 4 + 2n + n*(3+14n) = 4 + 2n + 3n + 14n^2 = 4 + 5n + 14n^2 = n^2
+Клас складності: O(n^2)
+---------------------------------------------------------------
+
+(1) int i;
+(1) int j;
+(n) for i to n:
+  (1) distances[i] = inf;
+(1) distances[s] = 0;
+
+(n-1) for i to n-1:
+  (n^2) for j to e:
+    (2) if distances[edge[j].v] + edge[j].w < distances[edge[j].u]:
+    (2) distances[edge[j].u] = distances[edge[j].v] + edge[j].w
+
+O(n) = 1+1+n+1+(n-1)*e*4 - e*4 = 3+n+4en-4e = 3 + n + 4n*e -4e = n*e
+Клас складності: O(n*e)
