@@ -3,8 +3,10 @@
 #include <string>
 #include <list>
 #include <algorithm>
+#include <vector> 
+#include <fstream>
 #include <ctime>
-#define PRIME_SIZE 50
+#define PRIME_SIZE 1000
 
 using namespace std;
 
@@ -214,67 +216,114 @@ public:
 
 int main()
 {
+	ifstream fin;
+	vector <string> inp, inpC;
+	for (int i = 97; i < 107; i++) {
+		for (int j = 97; j < 107; j++) {
+			for (int k = 97; k < 107; k++) {
+				char s[] = { (char)i, (char)j, (char)k };
+				string str(s, 3);
+				inpC.push_back(str);
+			}
+		}
+	}
+
+	for (int i = 97; i < 107; i++) {
+		for (int j = 98; j < 107; j++) {
+			for (int k = 99; k < 107; k++) {
+				char s[] = { (char)i, (char)j, (char)k };
+				string str(s, 3);
+				inp.push_back(str);
+			}
+		}
+	}
 	cout << "-----------------Add names to hashtable----------------\n";
-	HashTable newTable;
-	double  finish_time;
-	finish_time = 0;
-	newTable.push("abc", "Alexey", 18);
-	newTable.push("bca", "Diana", 19); 
-	newTable.push("bac", "Alexey", 17);//Collision
-	newTable.push("qwe", "Fedor", 21);
-	newTable.push("eqw", "Adrey", 44);//Collision
-	finish_time = (double)clock();
-	cout << "Add elements with collision: " << (finish_time )<< "mcs\n";
-	finish_time = 0;
-	newTable.push("rty", "Danyl", 32);
-	newTable.push("hgf", "Maria", 24);
-	newTable.push("nbn", "Dmitry", 54);
-	newTable.push("iuy", "Anton", 21);
-	newTable.push("kjh", "Adrey", 44);
-	finish_time = (double)clock();
-
-	cout << "Add elements without collision: " << (finish_time)<< "mcs\n";
-
-	finish_time = 0;
+	HashTable newTable, newTableC;
+	string x;
+	unsigned int start_time, finish_time, count = 0;
+	string letter;
+	fin.open("name1M.txt");
+	start_time = clock();
+	while (!fin.eof() && count < 700) {
+		fin >> x;
+		newTable.push(inp[count], x, (rand() % 99));
+		count++;
+	}
+	finish_time = clock();
+	fin.close();
+	cout << "Add elements without collision: " << (finish_time - start_time)<< "ms\n";
+	
+	fin.open("name1M.txt");
+	count = 0;
+	start_time = clock();
+	while (!fin.eof() && count < 700) {
+		fin >> x;
+		newTableC.push(inpC[(rand() % 500)], x, (rand() % 99));
+		count++;
+	}
+	finish_time = clock();
+	fin.close();
+	cout << "Add elements with collision: " << (finish_time - start_time) << "ms\n";
 	cout << "-----------------------Find element----------------------\n";
-	Person * search = newTable.find("iuy");
+	double dstart_time = (double)clock();
+	Person * search = newTable.find("abc");
+	double dfinish_time = (double)clock();
 	if (search)
 	{
 		cout << search->surname << endl;
 	}
-	finish_time = (double)clock();
-	cout << "Search elements: " << finish_time << "mcs\n";
+	cout << "Search elements: " << dfinish_time - dstart_time << "mcs\n";
+	dstart_time = (double)clock();
+	Person * searchD = newTableC.find("bca");
+	dfinish_time = (double)clock();
+	if (search)
+	{
+		cout << searchD->surname << endl;
+	}
+	cout << "Search elements with collision: " << dfinish_time - dstart_time << "mcs\n";
 
 	cout << "-----------------Add names to open hashtable----------------\n";
-	HashTableOpen newTableOpen;
-	finish_time = 0;
-	newTableOpen.push("abc", "Alexey", 18);
-	newTableOpen.push("bca", "Diana", 19);
-	newTableOpen.push("bac", "Alexey", 17);//Collision
-	newTableOpen.push("qwe", "Fedor", 21);
-	newTableOpen.push("eqw", "Adrey", 44);//Collision
-	finish_time = (double)clock();
-	cout << "Add elements with collision: " << (finish_time) << "mcs\n";
-	finish_time = 0;
-	newTableOpen.push("rty", "Danyl", 32);
-	newTableOpen.push("hgf", "Maria", 24);
-	newTableOpen.push("nbn", "Dmitry", 54);
-	newTableOpen.push("iuy", "Anton", 21);
-	newTableOpen.push("kjh", "Adrey", 44);
-	finish_time = (double)clock();
+	HashTableOpen newTableOpen, newTableOpenC;
+	count = 0;
+	fin.open("name1M.txt");
+	start_time = clock();
+	while (!fin.eof() && count < 700) {
+		fin >> x;
+		newTableOpen.push(inp[count], x, (rand() % 99));
+		count++;
+	}
+	finish_time = clock();
+	fin.close();
+	cout << "Add elements without collision: " << (finish_time - start_time) << "ms\n";
+	fin.open("name1M.txt");
+	count = 0;
+	start_time = clock();
+	while (!fin.eof() && count < 700) {
+		fin >> x;
+		newTableOpenC.push(inpC[(rand() % 500)], x, (rand() % 99));
+		count++;
+	}
+	finish_time = clock();
+	fin.close();
+	cout << "Add elements with collision: " << (finish_time - start_time) << "ms\n";
 
-	cout << "Add elements without collision: " << (finish_time) << "mcs\n";
-
-	finish_time = 0;
 	cout << "-----------------------Find element----------------------\n";
-	PersonOpen * searchOpen = newTableOpen.find("abc");
+	dstart_time = (double)clock();
+	PersonOpen * searchOpen = newTableOpen.find("cba");
+	dfinish_time = (double)clock();
 	if (search)
 	{
 		cout << searchOpen->surname << endl;
 	}
-	finish_time = (double)clock();
-	cout << "Search elements: " << finish_time << "mcs\n";
-
+	cout << "Search elements: " << dfinish_time - dstart_time << "mcs\n";
+	dstart_time = (double)clock();
+	PersonOpen * searchOpenD = newTableOpenC.find("cba");
+	dfinish_time = (double)clock();
+	if (search)
+	{
+		cout << searchOpenD->surname << endl;
+	}
+	cout << "Search elements: " << dfinish_time - dstart_time << "mcs\n";
 	return 0;
 }
 
