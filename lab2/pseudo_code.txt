@@ -1,0 +1,105 @@
+------------------------------------------------------------
+Псевдокод для відкритого хешування:
+------------------------------------------------------------
+tableSize
+(className) *table[tableSize]
+
+hashFunction(string str)  (n+2)   Max: (n)
+  int asciisum := 0 (1)
+    for i to str.length (n)
+      asciisum := asciisum + str[i] (2)
+    return asciisum % tableSize (1)
+
+HashTableOpen()
+  for i to tableSize
+      table[i] := NULL
+  }
+
+push(string name, string surname, int age)  Best: (1) Worst: (n)
+  int hashNumber := hash(name)  (1)
+  (className) *pers := new (className)(name, surname, age)  (1)
+  (className) *place := table[hashNumber] (1)
+
+  if (place == NULL)
+    table[hashNumber] := pers (1)
+    return
+
+  while (place->next != NULL) (n)
+    place := place->next  (1)
+
+  place->next := pers (1)
+
+
+
+(className)* find(string name)  Best: (1) Worst: (n)
+  int hashNumber := hash(name)  (1)
+  (className) *result := table[hashNumber]  (1)
+
+  if (!result)
+
+    Console("Element not found")
+    return NULL (1)
+
+  while (result->name != name)  (n)
+
+    if (!result->next)
+      Console("Element not found")
+      break
+
+    result := result->Next (1)
+
+  return result (1)
+
+------------------------------------------------------------
+Псевдокод для закритого хешування:
+------------------------------------------------------------
+
+tableSize
+(className) *table[tableSize]
+
+hashFunction(string str)  (n+2)   Max: (n)
+  int asciisum := 0 (1)
+    for i to str.length (n)
+      asciisum := asciisum + str[i] (2)
+    return asciisum % tableSize (1)
+
+HashTableOpen()
+  for i to tableSize
+      table[i] := NULL
+  }
+
+push(string name, string surname, int age)  Best: (1) Worst: (n)
+  int hashNumber := hash(name)  (1)
+  (className) *pers := new (className)(name, surname, age)  (1)
+  (className) *place := table[hashNumber] (1)
+
+  if (place == NULL)
+    table[hashNumber] := pers (1)
+    return
+
+  while (place->next != NULL) (n)
+    place := place->next  (1)
+
+  place->next := pers (1)
+
+
+
+(className)* find(string name)  Best: (1) Worst: (n)
+  int hashNumber := hash(name)  (1)
+  (className) *result := table[hashNumber]  (1)
+
+  if (!result)
+
+    Console("Element not found")
+    return NULL (1)
+
+  while (result->name != name)  (n)
+
+    if (!result->next)
+      Console("Element not found")
+      break
+
+    result := result->Next (1)
+
+  return result (1)
+

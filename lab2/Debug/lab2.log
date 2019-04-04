@@ -1,2 +1,4 @@
 ﻿  lab2.cpp
+d:\kpi\ds\1 lab\lab2\lab2.cpp(34): warning C4018: '<': signed/unsigned mismatch
+d:\kpi\ds\1 lab\lab2\lab2.cpp(148): warning C4018: '<': signed/unsigned mismatch
   lab2.vcxproj -> D:\KPI\DS\1 Lab\lab2\Debug\lab2.exe

@@ -3,126 +3,278 @@
 #include <string>
 #include <list>
 #include <algorithm>
+#include <ctime>
+#define PRIME_SIZE 50
+
 using namespace std;
 
-class Identifier
+
+class Person
 {
 public:
-	Identifier(const string &name) :
-		m_name(name)
-	{
-	}
+	string name;
+	string surname;
+	int age;
 
-public:
-	string name() const
+	Person(string name, string surname, int age = 0)
 	{
-		return m_name;
+		this->name = name;
+		this->surname = surname;
+		this->age = age;
 	}
-
-private:
-	string m_name;
 };
-bool operator==(const Identifier &left, const Identifier &right)
-{
-	return left.name() == right.name();
-}
 
-size_t my_hash(const Identifier &id)
-{
-
-	if (id.name().length() == 1)
-		return 2 * size_t(id.name()[0]);
-	return size_t(id.name()[0]) + size_t(id.name()[1]);
-}
-
-size_t two_hash(const Identifier &id)
-{
-	unsigned int b = 378551;
-	unsigned int a = 63689;
-	unsigned int hash = 0;
-
-	for (size_t i = 0; i < id.name().length(); i++)
-	{
-		hash = hash * a + id.name()[i];
-		a = a * b;
-	}
-
-	return (hash & 0x7FFFFFFF);
-}
-class IDNotFoundException : exception
-{
-public:
-	IDNotFoundException(const string id_name) :
-		m_what(string("Identifier \'") + id_name + "\' not found!")
-	{
-	}
-
-	virtual ~IDNotFoundException() throw()
-	{
-	}
-
-public:
-	const char *what() const throw()
-	{
-		return m_what.c_str();
-	}
-
-private:
-	string m_what;
-};
 class HashTable
 {
-public:
-	static const size_t min_hash_value = int('A') + int('0');
-	static const size_t max_hash_value = int('z') + int('z');
-	static const size_t hash_table_size = max_hash_value - min_hash_value;
+	Person *table[PRIME_SIZE];
 
-public:
-	void add(const Identifier &id)
+	static int hash(string str)
 	{
-		m_hash_table[my_hash(id) - min_hash_value].push_back(id);
+		int asciisum = 0;
+		for (int i = 0; i < str.length(); i++)
+		{
+			asciisum += str[i];
+		}
+		return asciisum % PRIME_SIZE;
 	}
 
-	Identifier &get(const string &id_name)
-	{
-		list<Identifier>& line = m_hash_table[my_hash(id_name) - min_hash_value];
-		list<Identifier>::iterator it = find(line.begin(), line.end(), id_name);
+public:
 
-		if (it == line.end())
-			throw IDNotFoundException(id_name);
-		return *it;
+	HashTable()
+	{
+		for (int i = 0; i < PRIME_SIZE; i++)
+		{
+			table[i] = NULL;
+		}
 	}
 
-private:
-	list<Identifier> m_hash_table[hash_table_size];
-};
-class HashTableClose {
+	~HashTable()
+	{
+		for (int i = 0; i < PRIME_SIZE; i++)
+		{
+			delete table[i];
+		}
+	}
 
+
+	void push(string name, string surname, int age)
+	{
+		int hashNumber = hash(name);
+		Person *pers = new Person(name, surname, age);
+		Person *place = table[hashNumber];
+		if (place == NULL)
+		{
+			table[hashNumber] = pers;
+			return;
+		}
+
+		for (int i = 0; i < PRIME_SIZE; i++)  if (table[i] == NULL) { table[i] = pers; return; }
+
+	}
+
+	Person* find(string name)
+	{
+		int hashNumber = hash(name);
+		Person *result = table[hashNumber];
+		if (!result)
+		{
+			cout << "Element not found" << endl;
+			return NULL;
+		}
+		bool is_find = false;
+		if (result->name != name)
+		{
+			for (int i = 0; i < PRIME_SIZE; i++)
+			{
+				if (table[i] && table[i]->name == name)
+				{
+					result = table[i];
+					is_find = true;
+					break;
+				}
+			}
+		}
+		else
+		{
+			return result;
+		}
+		if (is_find) return result;
+		else
+		{
+			cout << "Element not found" << endl;
+			return NULL;
+		}
+	}
 };
+
+class PersonOpen
+{
+public:
+	PersonOpen *next; 
+	string name;
+	string surname;
+	int age;
+
+	PersonOpen()
+	{
+		this->next = NULL;
+	}
+
+	PersonOpen(string name, string surname, int age = 0)
+	{
+		this->name = name;
+		this->surname = surname;
+		this->age = age;
+		this->next = NULL;
+	}
+
+	~PersonOpen()
+	{
+
+		if (this->next != NULL)
+		{
+			delete this->next;
+		}
+	}
+};
+
+class HashTableOpen
+{
+	PersonOpen *table[PRIME_SIZE];
+
+	static int hash(string str)
+	{
+		int asciisum = 0;
+		for (int i = 0; i < str.length(); i++)
+		{
+			asciisum += str[i];
+		}
+		return asciisum % PRIME_SIZE;
+	}
+
+public:
+
+	HashTableOpen()
+	{
+		for (int i = 0; i < PRIME_SIZE; i++)
+		{
+			table[i] = NULL;
+		}
+	}
+
+	~HashTableOpen()
+	{
+		for (int i = 0; i < PRIME_SIZE; i++)
+		{
+			delete table[i];
+		}
+	}
+
+	void push(string name, string surname, int age)
+	{
+		int hashNumber = hash(name);
+		PersonOpen *pers = new PersonOpen(name, surname, age);
+		PersonOpen *place = table[hashNumber];
+		if (place == NULL)
+		{
+			table[hashNumber] = pers;
+			return;
+		}
+
+		while (place->next != NULL)
+		{
+			place = place->next;
+		}
+		place->next = pers;
+	}
+
+	PersonOpen* find(string name)
+	{
+		int hashNumber = hash(name);
+		PersonOpen *result = table[hashNumber];
+		if (!result)
+		{
+			cout << "Element not found" << endl;
+			return NULL;
+		}
+
+		while (result->name != name)
+		{
+			if (!result->next)
+			{
+				cout << "Element not found" << endl;
+				break;
+			}
+			result = result->next;
+		}
+		return result;
+	}
+};
+
+
 int main()
 {
-	HashTable ht;
+	cout << "-----------------Add names to hashtable----------------\n";
+	HashTable newTable;
+	double  finish_time;
+	finish_time = 0;
+	newTable.push("abc", "Alexey", 18);
+	newTable.push("bca", "Diana", 19); 
+	newTable.push("bac", "Alexey", 17);//Collision
+	newTable.push("qwe", "Fedor", 21);
+	newTable.push("eqw", "Adrey", 44);//Collision
+	finish_time = (double)clock();
+	cout << "Add elements with collision: " << (finish_time )<< "mcs\n";
+	finish_time = 0;
+	newTable.push("rty", "Danyl", 32);
+	newTable.push("hgf", "Maria", 24);
+	newTable.push("nbn", "Dmitry", 54);
+	newTable.push("iuy", "Anton", 21);
+	newTable.push("kjh", "Adrey", 44);
+	finish_time = (double)clock();
 
-	ht.add(Identifier("a"));
-	ht.add(Identifier("aa"));
-	ht.add(Identifier("if"));
-	ht.add(Identifier("fi"));
-	ht.add(Identifier("abbbraaadaws"));
+	cout << "Add elements without collision: " << (finish_time)<< "mcs\n";
 
-	try
+	finish_time = 0;
+	cout << "-----------------------Find element----------------------\n";
+	Person * search = newTable.find("iuy");
+	if (search)
 	{
-		cout << ht.get("a").name() << endl;
-		cout << ht.get("aa").name() << endl;
-		cout << ht.get("if").name() << endl;
-		cout << ht.get("fi").name() << endl;
-		cout << ht.get("abbbraaadaws").name() << endl;
+		cout << search->surname << endl;
+	}
+	finish_time = (double)clock();
+	cout << "Search elements: " << finish_time << "mcs\n";
 
-		cout << ht.get("hello").name() << endl;
-	}
-	catch (const IDNotFoundException &ex)
+	cout << "-----------------Add names to open hashtable----------------\n";
+	HashTableOpen newTableOpen;
+	finish_time = 0;
+	newTableOpen.push("abc", "Alexey", 18);
+	newTableOpen.push("bca", "Diana", 19);
+	newTableOpen.push("bac", "Alexey", 17);//Collision
+	newTableOpen.push("qwe", "Fedor", 21);
+	newTableOpen.push("eqw", "Adrey", 44);//Collision
+	finish_time = (double)clock();
+	cout << "Add elements with collision: " << (finish_time) << "mcs\n";
+	finish_time = 0;
+	newTableOpen.push("rty", "Danyl", 32);
+	newTableOpen.push("hgf", "Maria", 24);
+	newTableOpen.push("nbn", "Dmitry", 54);
+	newTableOpen.push("iuy", "Anton", 21);
+	newTableOpen.push("kjh", "Adrey", 44);
+	finish_time = (double)clock();
+
+	cout << "Add elements without collision: " << (finish_time) << "mcs\n";
+
+	finish_time = 0;
+	cout << "-----------------------Find element----------------------\n";
+	PersonOpen * searchOpen = newTableOpen.find("abc");
+	if (search)
 	{
-		cerr << ex.what() << endl;
+		cout << searchOpen->surname << endl;
 	}
+	finish_time = (double)clock();
+	cout << "Search elements: " << finish_time << "mcs\n";
 
 	return 0;
 }
+

@@ -1,39 +1,47 @@
-﻿Псевдокод для сортування підрахунком:
+-------------------------------------------------------------
+(1) int distances[]
+(1) bool processed_verts[]
 
-countSort(list)
-	max := maxElement(list)
-	min := minElement(list)
-	range := max - min + 1
+(n) for i to verts_count:
+  (1) distances[i] = inf
+  (1) processed_verts[i] = false
 
-	new List
+(1) distances[src] = 0
+(1) int u;
 
-(4) Add(x, stack):
-  (1)   temp := new Stack
-  (1)   temp->element = x;
-  (1)   temp->next = stack->start;
-  (1)   stack->start = temp;
+(n) for count to verts_count:
+  (2+5n) u = minDistance()
+  (1) processed_verts[u] = true
+  (n) for v to verts_count:
+    (7) if !processed_verts[v] and graph[u][v] and distances[u] != inf and
+    distances[u] + graph[u][v] < distances[v]:
+      (2) distances[v] = distances[u] + graph[u][v]
 
-(1) file fin;
-(n) while !fin.endOfFile():
-  (1)   x := fin.read()
-  (4)   Add(x, stack)
------------------------------------------
-max(1 + n * (1 + 4)) = max(1 + 5n) = O(n)
------------------------------------------
 
-Псевдокод для списку:
 
-(4) Add(x):
-  (1) temp := new element;
-  (1) temp->x = x;
-  (1) temp->Next = Head;
-  (1) Head = temp;
+(2+5n) def minDistance():
+   (1) min = inf
+   (1) min_index;
+   (n) for v to verts_count:
+     (3) if processed_verts[v] == false and distances[v] <= min:
+     (1) min = distances[v]
+     (1) min_index = v;
 
-(1) file fin;
-(n) while !fin.endOfFile():
-  (1)   x := fin.read()
-  (4)   list.Add(x)
-  -----------------------------------------
-  max(1 + n * (1 + 4)) = max(1 + 5n) = O(n)
-  -----------------------------------------
-  
+
+O(n) = 1+1+2n+1+1+n*(2+5n+1+9n) = 4 + 2n + n*(3+14n) = 4 + 2n + 3n + 14n^2 = 4 + 5n + 14n^2 = n^2
+���� ���������: O(n^2)
+---------------------------------------------------------------
+
+(1) int i;
+(1) int j;
+(n) for i to n:
+  (1) distances[i] = inf;
+(1) distances[s] = 0;
+
+(n-1) for i to n-1:
+  (n^2) for j to e:
+    (2) if distances[edge[j].v] + edge[j].w < distances[edge[j].u]:
+    (2) distances[edge[j].u] = distances[edge[j].v] + edge[j].w
+
+O(n) = 1+1+n+1+(n-1)*e*4 - e*4 = 3+n+4en-4e = 3 + n + 4n*e -4e = n*e
+���� ���������: O(n*e)
