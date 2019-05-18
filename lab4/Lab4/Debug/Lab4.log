@@ -1,0 +1,5 @@
+﻿  Tree.cpp
+d:\omax1\coding\games\ds\discrete\lab4\lab4\tree.cpp(118): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+  LINK : эх эрщфхэ шыш эх т√яюыэхэр ёсюЁър D:\omax1\Coding\Games\DS\discrete\lab4\Lab4\Debug\Lab4.exe яЁш яюёыхфэхщ шэъЁхьхэЄэющ ъюьяюэютъх; т√яюыэ хЄё  яюыэр  ъюьяюэютър
+Tree.obj : error LNK2005: _main єцх юяЁхфхыхэ т Lab4.obj
+D:\omax1\Coding\Games\DS\discrete\lab4\Lab4\Debug\Lab4.exe : fatal error LNK1169: юсэрЁєцхэ ьэюуюъЁрЄэю юяЁхфхыхээ√щ ёшьтюы - юфшэ шыш сюыхх
